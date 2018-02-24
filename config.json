@@ -1,0 +1,7 @@
+{
+  "templates": {
+    "bash_profile": "~/.bash_profile",
+    "init.vim": "~/.config/nvim/init.vim",
+    "vimrc": "~/.vimrc"
+  }
+}
