@@ -1,9 +1,11 @@
+#!/usr/bin/env bash
+
 alias ll='ls -lsaG'
 alias python='python'
 alias vim=nvim # Because neovim is my vim
 alias src="source ~/.bash_profile"
-alias mytmpdir=`mktemp -d 2>/dev/null || mktemp -d -t 'mytmpdir'`
-alias diff=`colordiff -u "$@" | less -RF`
+alias mytmpdir=$(mktemp -d 2>/dev/null || mktemp -d -t 'mytmpdir')
+alias diff="colordiff -u '$@' | less -RF"
 
 export PATH=~/.local/bin:$PATH
 #export PATH="/usr/local/opt/sqlite/bin:$PATH"
@@ -65,6 +67,33 @@ export GOPATH=$HOME/go
 export PATH="$GOPATH/bin:$PATH"
 
 # ---------------------------------------------------------
+# NEEDED FOR EMACS DEPENDENCIES
+# ---------------------------------------------------------
+
+## To use gnu commands with their normal names
+PATH="/usr/local/opt/gnu-sed/libexec/gnubin:$PATH"
+MANPATH="/usr/local/opt/gnu-sed/libexec/gnuman:$MANPATH"
+
+# ---------------------------------------------------------
+# BASH
+# ---------------------------------------------------------
+
+# Auto-complete for bash
+[ -f /usr/local/etc/bash_completion ] && . /usr/local/etc/bash_completion
+
+# Better git support
+if [ -f "$(brew --prefix)/opt/bash-git-prompt/share/gitprompt.sh" ]; then
+  __GIT_PROMPT_DIR=$(brew --prefix)/opt/bash-git-prompt/share
+  source "$(brew --prefix)/opt/bash-git-prompt/share/gitprompt.sh"
+fi
+
+# ---------------------------------------------------------
+# QUALTRICS PROFILE
+# ---------------------------------------------------------
+
+source ~/.qualtrics_profile
+
+# ---------------------------------------------------------
 # SSH
 # ---------------------------------------------------------
 
@@ -95,31 +124,3 @@ export PATH="$GOPATH/bin:$PATH"
          re-source_ssh_agent
      fi
  fi
-
-# ---------------------------------------------------------
-# NEEDED FOR EMACS DEPENDENCIES
-# ---------------------------------------------------------
-
-## To use gnu commands with their normal names
-PATH="/usr/local/opt/gnu-sed/libexec/gnubin:$PATH"
-MANPATH="/usr/local/opt/gnu-sed/libexec/gnuman:$MANPATH"
-
-# ---------------------------------------------------------
-# BASH
-# ---------------------------------------------------------
-
-# Auto-complete for bash
-[ -f /usr/local/etc/bash_completion ] && . /usr/local/etc/bash_completion
-
-# Better git support
-if [ -f "$(brew --prefix)/opt/bash-git-prompt/share/gitprompt.sh" ]; then
-  __GIT_PROMPT_DIR=$(brew --prefix)/opt/bash-git-prompt/share
-  source "$(brew --prefix)/opt/bash-git-prompt/share/gitprompt.sh"
-fi
-
-# ---------------------------------------------------------
-# QUALTRICS PROFILE
-# ---------------------------------------------------------
-
-source ~/.qualtrics_profile
-
