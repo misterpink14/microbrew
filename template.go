@@ -6,6 +6,7 @@ import (
 	"os"
 	"os/user"
 	"text/template"
+	"path/filepath"
 )
 
 type ITemplates interface {
@@ -45,6 +46,7 @@ func NewTemplateFile(sourceFilePath, destFilePath string) ITemplateFile {
 		DestFilePath:   destFilePath}
 }
 
+
 func (t *Templates) GetTemplateFileNames() ([]string, error) {
 	fileInfos, err := ioutil.ReadDir(t.TemplatesPath)
 	if err != nil {
@@ -75,15 +77,25 @@ func (t *Templates) CopyTemplates() {
 	}
 }
 
+func (t* TemplateFile) mkdirIfNotExists(){
+	destDirPath := filepath.Dir(t.DestFilePath)
+	log.Println(destDirPath);
+	if _, err := os.Stat(destDirPath); os.IsNotExist(err) {
+		log.Printf("Creating path [%s]", destDirPath)
+		os.MkdirAll(destDirPath, os.ModePerm)
+	}
+}
+
 func (t *TemplateFile) CopyTemplate() {
 	log.Printf("Copying [%s] to [%s]", t.SourceFilePath, t.DestFilePath)
-	temp, err := template.ParseFiles(t.SourceFilePath)
+	templateFile, err := template.ParseFiles(t.SourceFilePath)
 	if err != nil {
 		log.Fatalln(err)
 	}
-	destFile, err := os.OpenFile(t.DestFilePath, os.O_CREATE|os.O_WRONLY, 0644)
+	t.mkdirIfNotExists()
+	destFile, err := os.OpenFile(t.DestFilePath, os.O_CREATE|os.O_RDWR|os.O_TRUNC, 0777)
 	if err != nil {
 		log.Fatalln(err)
 	}
-	temp.Execute(destFile, struct{ Home string }{t.UserHome})
+	templateFile.Execute(destFile, struct{ Home string }{t.UserHome})
 }
