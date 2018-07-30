@@ -1,14 +1,14 @@
-package main
+package dependency
 
 import (
 	"os/exec"
 )
 
-type IDependency interface {
-	IsInstalled() (bool, error)
-	Install() error
-	Update() error
-}
+// type IDependency interface {
+// IsInstalled() (bool, error)
+// Install() error
+// Update() error
+// }
 
 type Dependency struct {
 	Name           string

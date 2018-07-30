@@ -1,4 +1,4 @@
-package main
+package template
 
 import (
 	"fmt"
@@ -7,9 +7,13 @@ import (
 	"os"
 	"os/user"
 	"testing"
+
+	"github.com/misterpink14/microbrew/internal/util"
 )
 
 const (
+	ExampleTemplatesPath = "example/template"
+
 	TempFolderName1 = "tempfolder1"
 	TempFolderName2 = "tempfolder2"
 	TempFileName1   = "tempfile1"
@@ -109,11 +113,11 @@ func TestTemplates_GetTemplateFileNames_NonEmptyDir(t *testing.T) {
 		log.Println(err)
 		t.Errorf("Expecting 2 file names, got %d", len(templateFileNames)-2)
 	}
-	if !Includes(templateFileNames, TempFileName1) {
+	if !util.Includes(templateFileNames, TempFileName1) {
 		log.Println(err)
 		t.Errorf("File is not included: %s", TempFileName1)
 	}
-	if !Includes(templateFileNames, TempFileName2) {
+	if !util.Includes(templateFileNames, TempFileName2) {
 		log.Println(err)
 		t.Errorf("File is not included: %s", TempFileName2)
 	}
@@ -129,7 +133,7 @@ func TestTemplates_CopyTemplates(t *testing.T) {
 		"bash_profile": dirPath + "/bash_profile",
 	}
 
-	templates := NewTemplates(TemplatesPath, templatesConfig)
+	templates := NewTemplates(ExampleTemplatesPath, templatesConfig)
 	templates.CopyTemplates()
 
 	if files, err := ioutil.ReadDir(dirPath); err != nil {

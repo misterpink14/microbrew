@@ -1,25 +1,27 @@
-package main
+package template
 
 import (
+	"fmt"
 	"io/ioutil"
 	"log"
 	"os"
 	"os/user"
 	"text/template"
-)
 
-type ITemplates interface {
-	GetTemplateFileNames() ([]string, error)
-	CopyTemplates()
-}
+	"github.com/misterpink14/microbrew/internal/util"
+)
 
 type ITemplateFile interface {
 	CopyTemplate()
 }
 
 type Templates struct {
-	TemplatesPath   string
-	TemplatesConfig map[string]string
+	TemplateList []TemplateFile
+}
+
+type Template struct {
+	Name string
+	Path string
 }
 
 type TemplateFile struct {
@@ -28,8 +30,21 @@ type TemplateFile struct {
 	DestFilePath   string
 }
 
-func NewTemplates(templatesPath string, templatesConfig map[string]string) ITemplates {
-	return &Templates{
+func NewTemplates(templatesPath string, templatesConfig map[string]string) Templates {
+	templateList := new([]Template)
+	for name, path := range templatesConfig {
+		templatePath := fmt.Sprintf("%s/%s", templatesPath, path)
+		templateList = append(templateList, Template{name, templatePath})
+
+		if dest, ok := t.TemplatesConfig[templateName]; ok {
+			templateFile := NewTemplateFile(
+				t.TemplatesPath+"/"+templateName,
+				util.ReplaceWithHome(dest))
+			templateFile.CopyTemplate()
+		}
+	}
+
+	return Templates{
 		TemplatesPath:   templatesPath,
 		TemplatesConfig: templatesConfig}
 }
@@ -68,9 +83,10 @@ func (t *Templates) CopyTemplates() {
 
 	for _, templateName := range templateNames {
 		if dest, ok := t.TemplatesConfig[templateName]; ok {
-			NewTemplateFile(
+			templateFile := NewTemplateFile(
 				t.TemplatesPath+"/"+templateName,
-				ReplaceWithHome(dest)).CopyTemplate()
+				util.ReplaceWithHome(dest))
+			templateFile.CopyTemplate()
 		}
 	}
 }

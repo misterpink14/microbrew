@@ -1,14 +1,12 @@
 package main
 
 import (
-	//"os"
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"log"
 	"sync"
 )
-
-const ConfigPath = "./config.json"
 
 var (
 	configSingleton Config
@@ -19,11 +17,14 @@ type Config struct {
 	Templates map[string]string `json:"templates"`
 }
 
-func GetConfig() Config {
+// GetConfig gets config information from a given path and filename
+func GetConfig(path, filename string) Config {
 	configOnce.Do(func() {
-		byteValue, err := ioutil.ReadFile(ConfigPath)
+		configJSON := fmt.Sprintf("%s/%s.json", path, filename)
+		log.Println(configJSON)
+		byteValue, err := ioutil.ReadFile(configJSON)
 		if err != nil {
-			log.Fatalln("Cannot open config file:", ConfigPath)
+			log.Fatalln("Cannot open config file:", configJSON)
 		}
 		json.Unmarshal(byteValue, &configSingleton)
 	})
